@@ -12,6 +12,13 @@
       - service: rabbitmq-server
 {% endfor %}
 
+/var/lib/rabbitmq/.erlang.cookie:
+  file.managed:
+  - contents:
+      {{ salt["pillar.get"]("rabbitmq:erlang_cookie") }}
+  - watch_in:
+    - service: rabbitmq-server
+
 {% for name, policy in salt["pillar.get"]("rabbitmq:policy", {}).items() %}
 {{ name }}:
   rabbitmq_policy.present:
